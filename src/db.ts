@@ -15,7 +15,9 @@ export async function createEvent(
 
 export async function getEvents(): Promise<CountdownEvent[]> {
 	const db = await Database.load("sqlite:test.db");
-	return db.select<CountdownEvent[]>("SELECT id, title, datetime FROM events");
+	return db.select<CountdownEvent[]>(
+		"SELECT id, title, datetime FROM events ORDER BY datetime",
+	);
 }
 
 export async function updateEvent(
@@ -35,4 +37,3 @@ export async function deleteEvent(id: number) {
 	const db = await Database.load("sqlite:test.db");
 	await db.execute("DELETE FROM events WHERE id = ?", [id]);
 }
-

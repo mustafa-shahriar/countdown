@@ -3,6 +3,7 @@ import { createEvent } from "./db";
 
 interface AddCountdownProps {
 	onEventAdded: () => void;
+	onCancelAdd: () => void;
 }
 
 export function AddCountdown(props: AddCountdownProps) {
@@ -68,13 +69,18 @@ export function AddCountdown(props: AddCountdownProps) {
 						required
 					/>
 				</div>
-				<div class="text-center">
+				<div class="text-center flex gap-5 flex-1 justify-center">
 					<button type="submit" class="btn btn-primary">
 						Add Event
 					</button>
 				</div>
 			</form>
+
+			<div class="text-center mt-5">
+				<button class="btn btn-error" onClick={props.onCancelAdd}>
+					Cancel
+				</button>
+			</div>
 		</div>
 	);
 }
-

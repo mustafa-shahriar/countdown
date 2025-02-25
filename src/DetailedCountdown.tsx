@@ -11,9 +11,9 @@ export function DetailedCountdown(props: DetailedCountdownProps) {
 		<div class="min-h-screen flex items-center justify-center">
 			<div class="p-8 rounded-lg shadow-md border border-primary flex flex-col justify-center items-center gap-6">
 				<h1 class="text-3xl font-bold text-center">{props.event.title}</h1>
-				<Timer endDate={props.event.endDate} />
+				<Timer datetime={props.event.datetime} />
 				<p class="text-center text-gray-600">
-					Event Date: {props.event.endDate.toLocaleString()}
+					Event Date: {new Date(props.event.datetime).toLocaleDateString()}	
 				</p>
 				<div class="flex gap-6">
 					<button onClick={props.onClose} class="btn btn-primary">
