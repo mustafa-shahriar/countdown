@@ -3,17 +3,25 @@ import { warn, debug, trace, info, error } from "@tauri-apps/plugin-log";
 import { HomePage } from "./HomePage.tsx";
 import { DetailedCountdown } from "./DetailedCountdown.tsx";
 import { AddCountdown } from "./AddCountdown.tsx";
-import { getEvents, deleteEvent } from "./db";
+import { getEvents, deleteEvent, createEvent, updateEvent } from "./db";
 
 export enum Page {
 	Home,
 	AddCountdown,
 	DetailedCountdown,
+	EditEvent,
 }
 
 export interface CountdownEvent {
 	id: number;
 	title: string;
+	description: string;
+	datetime: string;
+}
+
+export interface CreateEvent {
+	title: string;
+	description: string;
 	datetime: string;
 }
 
@@ -48,29 +56,15 @@ export default function App() {
 		}
 	};
 
+	const editEventHandler = async () => {
+		setCurrentPage(Page.EditEvent);
+	};
+
 	createEffect(() => {
 		fetchEvents();
 	});
 
-	const loadMore = () => {
-		const newEvents = [
-			{
-				id: events().length + 1,
-				title: `New Event ${events().length + 1}`,
-				datetime: new Date(
-					Date.now() + Math.random() * 50 * 24 * 60 * 60 * 1000,
-				).toISOString(),
-			},
-			{
-				id: events().length + 2,
-				title: `New Event ${events().length + 2}`,
-				datetime: new Date(
-					Date.now() + Math.random() * 50 * 24 * 60 * 60 * 1000,
-				).toISOString(),
-			},
-		];
-		setEvents([...events(), ...newEvents]);
-	};
+	const loadMore = () => {};
 
 	const selectEvent = (event: CountdownEvent) => {
 		setSelectedEvent(event);
@@ -95,11 +89,17 @@ export default function App() {
 				</Match>
 				<Match when={currentPage() === Page.AddCountdown}>
 					<AddCountdown
-						onEventAdded={() => {
-							fetchEvents();
+						onSubmitHandler={async (newEvent) => {
+							await createEvent(
+								newEvent.title,
+								newEvent.description,
+								newEvent.datetime,
+							);
+							await fetchEvents();
 							setCurrentPage(Page.Home);
 						}}
-						onCancelAdd={() => setCurrentPage(Page.Home)}
+						onCancelHandler={() => setCurrentPage(Page.Home)}
+						successBtnName="Add Event"
 					/>
 				</Match>
 				<Match when={currentPage() === Page.DetailedCountdown}>
@@ -107,6 +107,28 @@ export default function App() {
 						event={selectedEvent()!}
 						onClose={closeDetailedView}
 						onDelete={deleteEventHandler}
+						onEdit={editEventHandler}
+					/>
+				</Match>
+				<Match when={currentPage() === Page.EditEvent}>
+					<AddCountdown
+						onSubmitHandler={async (newEvent) => {
+							await updateEvent(
+								selectedEvent()?.id!,
+								newEvent.title,
+								newEvent.description,
+								newEvent.datetime,
+							);
+							await fetchEvents();
+							setCurrentPage(Page.Home);
+						}}
+						onCancelHandler={() => setCurrentPage(Page.Home)}
+						successBtnName="Save"
+						defaultValues={{
+							title: selectedEvent()?.title!,
+							description: selectedEvent()?.description!,
+							datetime: selectedEvent()?.datetime!,
+						}}
 					/>
 				</Match>
 			</Switch>

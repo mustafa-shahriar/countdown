@@ -1,26 +1,35 @@
 import { createSignal } from "solid-js";
-import { createEvent } from "./db";
+import { CreateEvent } from "./App";
 
 interface AddCountdownProps {
-	onEventAdded: () => void;
-	onCancelAdd: () => void;
+	defaultValues?: CreateEvent;
+	successBtnName: string;
+	onSubmitHandler: (event: CreateEvent) => void;
+	onCancelHandler: () => void;
 }
 
 export function AddCountdown(props: AddCountdownProps) {
-	const [title, setTitle] = createSignal("");
-	const [description, setDescription] = createSignal("");
-	const [datetime, setDatetime] = createSignal("");
+	const [title, setTitle] = createSignal(props.defaultValues?.title || "");
+	const [description, setDescription] = createSignal(
+		props.defaultValues?.description || "",
+	);
+	const [datetime, setDatetime] = createSignal(
+		props.defaultValues?.datetime || "",
+	);
 	const [error, setError] = createSignal<string | null>(null);
 
 	const handleSubmit = async (e: Event) => {
 		e.preventDefault();
 		try {
-			await createEvent(title(), description(), datetime());
+			props.onSubmitHandler({
+				title: title(),
+				description: description(),
+				datetime: datetime(),
+			});
 			setTitle("");
 			setDescription("");
 			setDatetime("");
 			setError(null);
-			props.onEventAdded(); // Call the callback to refetch events
 		} catch (err) {
 			setError("Failed to add event. Please try again.");
 		}
@@ -71,13 +80,13 @@ export function AddCountdown(props: AddCountdownProps) {
 				</div>
 				<div class="text-center flex gap-5 flex-1 justify-center">
 					<button type="submit" class="btn btn-primary">
-						Add Event
+						{props.successBtnName}
 					</button>
 				</div>
 			</form>
 
 			<div class="text-center mt-5">
-				<button class="btn btn-error" onClick={props.onCancelAdd}>
+				<button class="btn btn-error" onClick={props.onCancelHandler}>
 					Cancel
 				</button>
 			</div>

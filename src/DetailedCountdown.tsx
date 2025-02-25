@@ -5,6 +5,7 @@ interface DetailedCountdownProps {
 	event: CountdownEvent;
 	onClose: () => void;
 	onDelete: (id: number) => void;
+	onEdit: () => void;
 }
 
 export function DetailedCountdown(props: DetailedCountdownProps) {
@@ -20,7 +21,9 @@ export function DetailedCountdown(props: DetailedCountdownProps) {
 					<button onClick={props.onClose} class="btn btn-primary">
 						Back to Home
 					</button>
-					<button class="btn btn-primary">Edit</button>
+					<button class="btn btn-primary" onClick={props.onEdit}>
+						Edit
+					</button>
 					<button
 						class="btn btn-error"
 						onClick={() => props.onDelete(props.event.id)}

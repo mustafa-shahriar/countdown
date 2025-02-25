@@ -16,7 +16,7 @@ export async function createEvent(
 export async function getEvents(): Promise<CountdownEvent[]> {
 	const db = await Database.load("sqlite:test.db");
 	return db.select<CountdownEvent[]>(
-		"SELECT id, title, datetime FROM events ORDER BY datetime",
+		"SELECT id, title, description, datetime FROM events ORDER BY datetime",
 	);
 }
 
