@@ -1,11 +1,13 @@
 import { createSignal, createEffect } from "solid-js";
+import { warn, debug, trace, info, error } from "@tauri-apps/plugin-log";
 
 interface TimerProps {
-	endDate: Date;
+	datetime: string;
 }
 
-export function Timer({ endDate: endTime }: TimerProps) {
-	const target = endTime.getTime();
+export function Timer({ datetime: endTime }: TimerProps) {
+	debug(JSON.stringify(endTime));
+	const target = new Date(endTime).getTime();
 	const [days, setDays] = createSignal(0);
 	const [hours, setHours] = createSignal(0);
 	const [minutes, setMinutes] = createSignal(0);

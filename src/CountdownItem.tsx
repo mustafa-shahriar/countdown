@@ -14,7 +14,7 @@ export function CountdownItem(props: CountdownItemProps) {
 		>
 			<h2 class="text-xl font-semibold mb-2">{props.event.title}</h2>
 
-			<Timer endDate={props.event.endDate} />
+			<Timer datetime={props.event.datetime} />
 		</div>
 	);
 }

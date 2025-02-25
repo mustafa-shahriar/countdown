@@ -1,11 +1,14 @@
-import { createSignal, createEffect } from "solid-js";
+import { createSignal, createEffect, Show } from "solid-js";
+import { warn, debug, trace, info, error } from "@tauri-apps/plugin-log";
 import { HomePage } from "./HomePage.tsx";
 import { DetailedCountdown } from "./DetailedCountdown.tsx";
+import { AddCountdown } from "./AddCountdown.tsx";
+import { getEvents } from "./db";
 
 export interface CountdownEvent {
 	id: number;
 	title: string;
-	endDate: Date;
+	datetime: string;
 }
 
 export default function App() {
@@ -13,58 +16,40 @@ export default function App() {
 	const [selectedEvent, setSelectedEvent] = createSignal<CountdownEvent | null>(
 		null,
 	);
+	const [showAddPage, setShowAddPage] = createSignal(false);
+	const [error, setError] = createSignal<string | null>(null);
+	const fetchEvents = async () => {
+		try {
+			const data = await getEvents();
+			debug(JSON.stringify(data));
+
+			setEvents(data);
+			setError(null);
+		} catch (err) {
+			console.error(err);
+			setError(String(err));
+		}
+	};
 
 	createEffect(() => {
-		setEvents([
-			{
-				id: 1,
-				title: "Next Football Match",
-				endDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
-			},
-			{
-				id: 2,
-				title: "Movie Release",
-				endDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
-			},
-			{
-				id: 3,
-				title: "Exam Date",
-				endDate: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
-			},
-			{
-				id: 4,
-				title: "Concert",
-				endDate: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
-			},
-			{
-				id: 5,
-				title: "Holiday",
-				endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-			},
-			{
-				id: 6,
-				title: "Holiday",
-				endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-			},
-		]);
+		fetchEvents();
 	});
 
 	const loadMore = () => {
-		// Simulating loading more events
 		const newEvents = [
 			{
 				id: events().length + 1,
 				title: `New Event ${events().length + 1}`,
-				endDate: new Date(
+				end_date: new Date(
 					Date.now() + Math.random() * 50 * 24 * 60 * 60 * 1000,
-				),
+				).toISOString(),
 			},
 			{
 				id: events().length + 2,
 				title: `New Event ${events().length + 2}`,
-				endDate: new Date(
+				end_date: new Date(
 					Date.now() + Math.random() * 50 * 24 * 60 * 60 * 1000,
-				),
+				).toISOString(),
 			},
 		];
 		setEvents([...events(), ...newEvents]);
@@ -80,18 +65,33 @@ export default function App() {
 
 	return (
 		<div class="min-h-screen">
-			{selectedEvent() ? (
+			<Show when={showAddPage()}>
+				<AddCountdown onEventAdded={fetchEvents} />
+			</Show>
+			<Show when={!showAddPage() && selectedEvent()}>
 				<DetailedCountdown
 					event={selectedEvent()!}
 					onClose={closeDetailedView}
 				/>
-			) : (
+			</Show>
+			<Show when={!showAddPage() && !selectedEvent()}>
 				<HomePage
 					events={events()}
 					onSelectEvent={selectEvent}
 					onLoadMore={loadMore}
 				/>
-			)}
+			</Show>
+			<Show when={!!error()}>
+				<div class="alert alert-error">{error()}</div>
+			</Show>
+			<div class="fixed bottom-4 right-4">
+				<button
+					onClick={() => setShowAddPage(!showAddPage())}
+					class="btn btn-primary"
+				>
+					{showAddPage() ? "Back to Home" : "Add Event"}
+				</button>
+			</div>
 		</div>
 	);
 }

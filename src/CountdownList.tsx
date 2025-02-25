@@ -10,11 +10,7 @@ interface CountdownListProps {
 export function CountdownList(props: CountdownListProps) {
 	return (
 		<div class="space-y-4">
-			<For
-				each={props.events.sort(
-					(a, b) => a.endDate.getTime() - b.endDate.getTime(),
-				)}
-			>
+			<For each={props.events}>
 				{(event) => (
 					<CountdownItem
 						event={event}
