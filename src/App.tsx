@@ -3,7 +3,7 @@ import { warn, debug, trace, info, error } from "@tauri-apps/plugin-log";
 import { HomePage } from "./HomePage.tsx";
 import { DetailedCountdown } from "./DetailedCountdown.tsx";
 import { AddCountdown } from "./AddCountdown.tsx";
-import { getEvents } from "./db";
+import { getEvents, deleteEvent } from "./db";
 
 export enum Page {
 	Home,
@@ -33,6 +33,17 @@ export default function App() {
 			setError(null);
 		} catch (err) {
 			console.error(err);
+			setError(String(err));
+		}
+	};
+
+	const deleteEventHandler = async (id: number) => {
+		try {
+			await deleteEvent(id);
+			await fetchEvents();
+			closeDetailedView();
+		} catch (err) {
+			debug(String(err));
 			setError(String(err));
 		}
 	};
@@ -95,6 +106,7 @@ export default function App() {
 					<DetailedCountdown
 						event={selectedEvent()!}
 						onClose={closeDetailedView}
+						onDelete={deleteEventHandler}
 					/>
 				</Match>
 			</Switch>
