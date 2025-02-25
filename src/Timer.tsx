@@ -34,26 +34,24 @@ export function Timer({ datetime: endTime }: TimerProps) {
 	});
 
 	return (
-		<div class="grid grid-flow-col gap-5 text-center auto-cols-max">
-			<div class="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
-				<span class="countdown font-mono text-5xl">
-					<span style={{ "--value": days() }}></span>
-				</span>
+		<div class="grid grid-cols-2 gap-5 text-center">
+			<div class="flex flex-col items-center justify-center p-2 bg-neutral rounded-box text-neutral-content">
+				<span class="countdown font-mono text-5xl">{days()}</span>
 				days
 			</div>
-			<div class="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+			<div class="flex flex-col items-center justify-center p-2 bg-neutral rounded-box text-neutral-content">
 				<span class="countdown font-mono text-5xl">
 					<span style={{ "--value": hours() }}></span>
 				</span>
 				hours
 			</div>
-			<div class="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+			<div class="flex flex-col items-center justify-center p-2 bg-neutral rounded-box text-neutral-content">
 				<span class="countdown font-mono text-5xl">
 					<span style={{ "--value": minutes() }}></span>
 				</span>
 				min
 			</div>
-			<div class="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+			<div class="flex flex-col items-center justify-center p-2 bg-neutral rounded-box text-neutral-content">
 				<span class="countdown font-mono text-5xl">
 					<span style={{ "--value": seconds() }} data-value={seconds()}></span>
 				</span>

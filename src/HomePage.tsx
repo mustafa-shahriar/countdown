@@ -17,7 +17,6 @@ export function HomePage(props: HomePageProps) {
 				events={props.events.slice(0, 5)}
 				onSelectEvent={props.onSelectEvent}
 			/>
-			// Show Button here
 			<div class="fixed bottom-4 right-4">
 				<button onClick={props.onAddEvent} class="btn btn-primary">
 					Add Event

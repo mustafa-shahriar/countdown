@@ -13,9 +13,10 @@ export function AddCountdown(props: AddCountdownProps) {
 	const [description, setDescription] = createSignal(
 		props.defaultValues?.description || "",
 	);
-	const [datetime, setDatetime] = createSignal(
-		props.defaultValues?.datetime || "",
-	);
+	const [defaultDate, defaultTime] =
+		props.defaultValues?.datetime?.split("T") || [];
+	const [date, setDate] = createSignal(defaultDate || "");
+	const [time, setTime] = createSignal(defaultTime || "");
 	const [error, setError] = createSignal<string | null>(null);
 
 	const handleSubmit = async (e: Event) => {
@@ -24,11 +25,12 @@ export function AddCountdown(props: AddCountdownProps) {
 			props.onSubmitHandler({
 				title: title(),
 				description: description(),
-				datetime: datetime(),
+				datetime: date() + "T" + time(),
 			});
 			setTitle("");
 			setDescription("");
-			setDatetime("");
+			setDate("");
+			setTime("");
 			setError(null);
 		} catch (err) {
 			setError("Failed to add event. Please try again.");
@@ -68,12 +70,24 @@ export function AddCountdown(props: AddCountdownProps) {
 				</div>
 				<div class="form-control">
 					<label class="label">
-						<span class="label-text">End Date</span>
+						<span class="label-text">Date</span>
 					</label>
 					<input
-						type="datetime-local"
-						value={datetime()}
-						onInput={(e) => setDatetime(e.currentTarget.value)}
+						type="date"
+						value={date()}
+						onInput={(e) => setDate(e.currentTarget.value)}
+						class="input input-bordered w-full"
+						required
+					/>
+				</div>
+				<div class="form-control">
+					<label class="label">
+						<span class="label-text">Time</span>
+					</label>
+					<input
+						type="time"
+						value={time()}
+						onInput={(e) => setTime(e.currentTarget.value)}
 						class="input input-bordered w-full"
 						required
 					/>
