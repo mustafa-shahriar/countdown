@@ -5,7 +5,7 @@ interface TimerProps {
 	datetime: string;
 }
 
-export function Timer({ datetime: endTime }: TimerProps) {
+export function TimerForList({ datetime: endTime }: TimerProps) {
 	debug(JSON.stringify(endTime));
 	const target = new Date(endTime).getTime();
 	const [days, setDays] = createSignal(0);
@@ -34,25 +34,25 @@ export function Timer({ datetime: endTime }: TimerProps) {
 	});
 
 	return (
-		<div class="grid grid-cols-2 gap-2 text-center">
-			<div class="flex flex-col items-center justify-center p-2 bg-neutral rounded-box text-neutral-content">
-				<span class="countdown font-mono text-5xl">{days()}</span>
+		<div class="grid grid-flow-col gap-5 text-center auto-cols-max">
+			<div class="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+				<span class="countdown font-mono text-3xl">{days()}</span>
 				days
 			</div>
-			<div class="flex flex-col items-center justify-center p-2 bg-neutral rounded-box text-neutral-content">
-				<span class="countdown font-mono text-5xl">
+			<div class="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+				<span class="countdown font-mono text-3xl">
 					<span style={{ "--value": hours() }}></span>
 				</span>
 				hours
 			</div>
-			<div class="flex flex-col items-center justify-center p-2 bg-neutral rounded-box text-neutral-content">
-				<span class="countdown font-mono text-5xl">
+			<div class="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+				<span class="countdown font-mono text-3xl">
 					<span style={{ "--value": minutes() }}></span>
 				</span>
 				min
 			</div>
-			<div class="flex flex-col items-center justify-center p-2 bg-neutral rounded-box text-neutral-content">
-				<span class="countdown font-mono text-5xl">
+			<div class="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+				<span class="countdown font-mono text-3xl">
 					<span style={{ "--value": seconds() }} data-value={seconds()}></span>
 				</span>
 				sec
