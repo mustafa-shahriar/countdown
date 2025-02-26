@@ -4,6 +4,7 @@ import { CreateEvent } from "./App";
 interface AddCountdownProps {
 	defaultValues?: CreateEvent;
 	successBtnName: string;
+	pageTitle: string;
 	onSubmitHandler: (event: CreateEvent) => void;
 	onCancelHandler: () => void;
 }
@@ -39,9 +40,7 @@ export function AddCountdown(props: AddCountdownProps) {
 
 	return (
 		<div class="container mx-auto px-4 py-8">
-			<h1 class="text-3xl font-bold mb-6 text-center">
-				Add New Countdown Event
-			</h1>
+			<h1 class="text-3xl font-bold mb-6 text-center">{props?.pageTitle}</h1>
 			{error() && <div class="alert alert-error">{error()}</div>}
 			<form onSubmit={handleSubmit} class="space-y-4">
 				<div class="form-control">

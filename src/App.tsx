@@ -2,7 +2,7 @@ import { createSignal, createEffect, Switch, Match } from "solid-js";
 import { warn, debug, trace, info, error } from "@tauri-apps/plugin-log";
 import { HomePage } from "./HomePage.tsx";
 import { DetailedCountdown } from "./DetailedCountdown.tsx";
-import { AddCountdown } from "./AddCountdown.tsx";
+import { AddCountdown } from "./TimerForm.tsx";
 import { getEvents, deleteEvent, createEvent, updateEvent } from "./db";
 
 export enum Page {
@@ -100,6 +100,7 @@ export default function App() {
 						}}
 						onCancelHandler={() => setCurrentPage(Page.Home)}
 						successBtnName="Add Event"
+						pageTitle="Add New Countdown Event"
 					/>
 				</Match>
 				<Match when={currentPage() === Page.DetailedCountdown}>
@@ -124,6 +125,7 @@ export default function App() {
 						}}
 						onCancelHandler={() => setCurrentPage(Page.Home)}
 						successBtnName="Save"
+						pageTitle="Edit Event"
 						defaultValues={{
 							title: selectedEvent()?.title!,
 							description: selectedEvent()?.description!,
